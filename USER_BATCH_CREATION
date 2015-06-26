@@ -1,0 +1,48 @@
+## CREATES NEW AD USERS BASED ON THE INFO IN AN IMPORTED CSV
+## SEE SAMPLE.CSV A DIRECTORY ABOVE
+
+import-module ActiveDirectory ##IN PS VERSION 4.0 AND ABOVE YOU DON'T NEED TO IMPORT THE MODULE
+
+$csv = read-host "What CSV do you want to import?" ##REPLACE WITH A STATIC FILE PATH, OR A CALL TO WINDOWS FORMS FOR A SELECT BOX
+
+$Users = (import-csv $csv) 
+
+foreach ($User in $Users)
+
+{
+
+$firstname = $User.'Firstname'
+$firstinitial = $firstname.substring(0,1)
+$lastname = $User.'Lastname'
+$fullname = $firstname +" "+$lastname
+$username = $firstinitial+$lastname ##CREATED USERNAME WILL BE THE FIRST INITIAL LAST NAME, E.G. JDOE
+$userprincipal = $username+"@sample.org" ##REPLACE WITH YOUR DOMAIN NAME
+$Directory = "C:\users\"+$username ##REPLACE WITH YOUR USER DIRECTORY
+$Password = $User.'pass'
+$Unit= $User.'Unit'
+$OU = 'OU=USERS,DC=SAMPLE,DC=ORG' ##REPLACE WITH YOUR PRIMARY OU, AND ADD EXCEPTIONS TO THE IF LOOP BELOW
+
+if ($Unit -eq 'sales') ##SETS THE LOGIN SCRIPT BASED ON THE UNIT VARIABLE; ADD IN YOUR UNITS AND THEIR SPECIFIC SCRIPTS/OUS/ETC
+{
+	$script = "sales_login_script.bat"
+	$OU = 'OU=Sales,DC=SAMPLE,DC=ORG'
+} 
+elseif ($Unit -eq 'marketing')
+{
+	$script = "marketing_login_script.bat"
+	$OU = 'OU=Marketing,DC=SAMPLE,DC=ORG'
+}
+elseif ($Unit -eq 'engineering')
+{	
+  $script = "engineering_login_script.bat"
+  $OU = 'OU=engineering,DC=SAMPLE,DC=ORG'
+}
+else
+{
+	$script = "login_script.bat"
+  $OU = 'OU=Users,DC=SAMPLE,DC=ORG'
+} 
+New-ADUser -Name $fullname -userPrincipalname $userprincipal -SamAccountName $username -GivenName $firstname -Surname $lastname -DisplayName $fullname -Path $OU -HomeDrive 'Z:' -HomeDirectory $directory -Scriptpath $script -AccountPassword (ConvertTo-SecureString $password -AsPlainText -Force) -ChangePasswordAtLogon $true -enabled $true
+}
+
+
