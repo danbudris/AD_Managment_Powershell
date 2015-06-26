@@ -1,0 +1,25 @@
+import-module ActiveDirectory
+
+$response = 'y'
+
+DO
+{
+$firstname = Read-Host 'First name?'
+$firstinitial = $firstname.substring(0,1)
+$lastname = Read-Host 'Last name?' 
+$fullname = $firstname +" "+$lastname
+$username = $firstinitial+$lastname
+$domain = Read-Host 'Domain? (domain.org)'
+$userprincipal = $username+"@"+$domain
+$password = read-host -AsSecureString "Set temporary password?"
+$OU = read-host 'What OU will this user be created in? (OU=users,DC=SAMPLE,DC=ORG)'
+
+New-ADUser -Name $fullname -userPrincipalname $userprincipal -SamAccountName $username -GivenName $firstname -Surname $lastname -DisplayName $fullname -Path $OU $directory -AccountPassword $password -ChangePasswordAtLogon $true -enabled $true
+
+$response = read-host "anything else (y/n)?"
+
+} 
+WHILE ($response -eq 'y')
+
+
+
