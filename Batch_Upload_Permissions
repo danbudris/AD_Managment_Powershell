@@ -1,0 +1,33 @@
+
+Function Get-FileName($initialDirectory)
+{   
+ [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") |
+ Out-Null
+
+ $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+ $OpenFileDialog.initialDirectory = $initialDirectory
+ $OpenFileDialog.filter = "All files (*.*)| *.*"
+ $OpenFileDialog.ShowDialog() | Out-Null
+ $OpenFileDialog.filename
+} #end function Get-FileName
+
+$csv = Get-FileName -initialDirectory "c:\fso" #sets the variable csv to the file selected in the GUI
+
+$User = (Import-CSV "$csv" | select -Property name -first 1 -ExpandProperty name) #grabs the name property out of the csv, and converts it to a string so it can be used in the command
+
+$Permissions = Import-Csv "$csv" # gets the csv, and imports it as a table it holds in memory
+
+$inherit = [system.security.accesscontrol.InheritanceFlags]"ContainerInherit, ObjectInherit" #sets object inheritence 
+
+$propagation = [system.security.accesscontrol.PropagationFlags]"None" 
+
+ForEach($line in $Permissions){
+
+$acl = Get-Acl $line.Path
+
+$accessrule = New-Object system.security.AccessControl.FileSystemAccessRule($User, "Modify", $inherit, $propagation, "Allow")
+
+$acl.AddAccessRule($accessrule)
+set-acl -aclobject $acl $line.Path
+
+}
