@@ -1,7 +1,7 @@
 ﻿
 function Grant-Access{
 
-<<<<<<< HEAD
+
 <#
     .SYNOPSIS
         Grants read, write, and modify permissions to a folder, subfolder and files.  
@@ -32,8 +32,6 @@ function Grant-Access{
 
    #>
 
-=======
->>>>>>> 80a1981489e65c44ec4348b1f8a4de8efc543ce3
 Param(
 [string]$batch,
 [string]$username,
@@ -121,7 +119,6 @@ write-host "GRANTED :)" -ForegroundColor Green -BackgroundColor DarkGray ##color
 
 function New-User {
 
-<<<<<<< HEAD
 <#
 
 .SYNOPSIS
@@ -150,8 +147,6 @@ John,Doe,Marketing,InsecurePassword
 
 #>
 
-=======
->>>>>>> 80a1981489e65c44ec4348b1f8a4de8efc543ce3
 Param(
 [string]$firstname,
 [string]$lastname,
@@ -211,6 +206,7 @@ $password = $User.'pass'
 $OU = 'OU=Users,DC=SAMPLE,DC=ORG' # REPLACE WITH OU NAME
 
 $WhichScript= $User.'Unit'
+
 # THE FOLLOWING LOOP DETERMINES WHICH LOGON SCRIPT TO ASSIGN, BASED ON UNIT NAME; REPLACE THIS WITH SCRIPTS, OR ELIMINATE
 # IF YOU DON'T NEED THIS, ALSO REMOVE THE $script PARAMATER FORM THE FINAL COMMAND
 #if ($whichScript -eq 'development')
@@ -285,7 +281,6 @@ New-ADUser -Name $fullname -userPrincipalname $userprincipal -SamAccountName $us
 
 
 function Active-Computers{
-<<<<<<< HEAD
 
 <#
     .SYNOPSIS
@@ -293,8 +288,6 @@ function Active-Computers{
     OU, group membership, last logon date, operating system and manager.
 #>
 
-=======
->>>>>>> 80a1981489e65c44ec4348b1f8a4de8efc543ce3
 get-adcomputer -Properties * -filter {enabled -eq "true"} | select -Property name,primarygroup,lastlogondate,memberof,operatingsystem,managedby | sort -Property primarygroup,memberof,name,operatingsystem,managedby
 }##end fucntion
 
