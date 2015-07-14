@@ -1,3 +1,10 @@
+<#
+    .SYNOPSIS
+    Creates Active Directory Users from user account information provided in a .CSV file.  
+    
+#>
+
+
 ## CREATES NEW AD USERS BASED ON THE INFO IN AN IMPORTED CSV
 ## SEE SAMPLE.CSV A DIRECTORY ABOVE
 
