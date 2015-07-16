@@ -31,3 +31,7 @@ $acl.AddAccessRule($accessrule)
 set-acl -aclobject $acl $line.Path
 
 }
+
+function Testing (){
+
+}
